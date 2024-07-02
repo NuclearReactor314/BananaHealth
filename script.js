@@ -49,7 +49,7 @@ function handleAuth() {
                 const latestActivity = activities[0];
                 const caloriesBurned = latestActivity.calories;
                 const bananasNeeded = calculateBananaConsumption(caloriesBurned);
-                const description = `Great run! To refuel, you'll need approximately ${bananasNeeded.toFixed(2)} bananas. Check out more at: https://bananahealth.netlify.app/`;
+                const description = `This run equals to approximately ${bananasNeeded.toFixed(2)} bananas. https://bananahealth.netlify.app/ (i cant afford a domain)`;
                 updateActivityDescription(accessToken, latestActivity.id, description).then(() => {
                     resultDiv.textContent = description;
                 });
