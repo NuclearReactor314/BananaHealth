@@ -1,5 +1,5 @@
 const clientId = '129566';
-const redirectUri = 'YOUR_REDIRECT_URI';
+const redirectUri = 'https://bananahealth.netlify.app/';
 const authorizeLink = document.getElementById('authorize-link');
 const resultDiv = document.getElementById('result');
 
@@ -49,7 +49,7 @@ function handleAuth() {
                 const latestActivity = activities[0];
                 const caloriesBurned = latestActivity.calories;
                 const bananasNeeded = calculateBananaConsumption(caloriesBurned);
-                const description = `Great run! To refuel, you'll need approximately ${bananasNeeded.toFixed(2)} bananas. Check out more at: https://your-username.netlify.app/`;
+                const description = `Great run! To refuel, you'll need approximately ${bananasNeeded.toFixed(2)} bananas. Check out more at: https://bananahealth.netlify.app/`;
                 updateActivityDescription(accessToken, latestActivity.id, description).then(() => {
                     resultDiv.textContent = description;
                 });
