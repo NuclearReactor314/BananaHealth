@@ -1,5 +1,5 @@
 const clientId = '129566';
-const redirectUri = 'https://bananahealth.netlify.app/';
+const redirectUri = 'https://bananahealth.netlify.app';
 const authorizeLink = document.getElementById('authorize-link');
 const resultDiv = document.getElementById('result');
 
