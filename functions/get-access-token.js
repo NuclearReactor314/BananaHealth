@@ -1,10 +1,10 @@
 const fetch = require('node-fetch');
 
-exports.handler = async function(event, context) {
+exports.handler = async (event, context) => {
     const { code } = JSON.parse(event.body);
+
     const clientId = process.env.CLIENT_ID;
     const clientSecret = process.env.CLIENT_SECRET;
-    const redirectUri = process.env.REDIRECT_URI;
 
     const response = await fetch('https://www.strava.com/oauth/token', {
         method: 'POST',
@@ -20,6 +20,7 @@ exports.handler = async function(event, context) {
     });
 
     const data = await response.json();
+
     return {
         statusCode: 200,
         body: JSON.stringify(data),
