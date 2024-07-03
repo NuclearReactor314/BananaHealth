@@ -3,7 +3,7 @@ const redirectUri = 'https://bananahealth.netlify.app';
 const authorizeLink = document.getElementById('authorize-link');
 const resultDiv = document.getElementById('result');
 
-authorizeLink.href = `https://www.strava.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=activity:read,activity:write`;
+authorizeLink.href = `https://www.strava.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=activity:read_all,activity:write`;
 
 function getStravaAccessToken(code) {
     return fetch('/.netlify/functions/get-access-token', {
@@ -20,6 +20,7 @@ function getStravaAccessToken(code) {
     })
     .catch(error => {
         console.error('Error fetching access token:', error);
+        throw error;
     });
 }
 
@@ -36,6 +37,7 @@ function getActivities(accessToken) {
     })
     .catch(error => {
         console.error('Error fetching activities:', error);
+        throw error;
     });
 }
 
@@ -59,6 +61,7 @@ function updateActivityDescription(accessToken, activityId, description) {
     })
     .catch(error => {
         console.error('Error updating activity description:', error);
+        throw error;
     });
 }
 
@@ -86,7 +89,11 @@ function handleAuth() {
                 } else {
                     console.error('No activities found');
                 }
+            }).catch(error => {
+                console.error('Error getting activities:', error);
             });
+        }).catch(error => {
+            console.error('Error getting access token:', error);
         });
     }
 }
