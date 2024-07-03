@@ -1,0 +1,6 @@
+= Banana Health =
+== Description ==
+A webapp using strava api to calculate the amount of banana needed for an activity.
+
+== Notes ==
+Deloyed to Netlify
