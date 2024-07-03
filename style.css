@@ -4,6 +4,7 @@ body {
     padding: 0;
     background-color: #f9f9f9; /* Light gray background */
     color: #333; /* Dark gray text */
+    vertical-align: middle;
 }
 
 header {
