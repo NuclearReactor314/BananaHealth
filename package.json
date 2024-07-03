@@ -1,5 +1,15 @@
 {
+  "name": "bananahealth",
+  "version": "1.0.0",
+  "description": "Calculate banana consumption from Strava activities.",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo \"No build step required.\""
+  },
   "dependencies": {
     "node-fetch": "^2.6.1"
-  }
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
 }
