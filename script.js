@@ -10,42 +10,67 @@ const accelerators = {
     high: { multiplier: 5, cost: 100 }
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Document is ready!');
+    
+    // Check if the URL contains a 'code' parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code) {
+        fetchStravaData(code);
+    }
+});
+
 document.getElementById('login-button').addEventListener('click', () => {
-    window.location.href = `https://www.strava.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=activity:read_all,activity:write&approval_prompt=force`;
+    console.log('Login button clicked!');
+    window.location.href = `https://www.strava.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=activity:read_all,activity:write&approval_prompt=force`;
 });
 
 async function fetchStravaData(code) {
-    const response = await fetch('https://www.strava.com/oauth/token', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            client_id: clientId,
-            client_secret: clientSecret,
-            code: code,
-            grant_type: 'authorization_code'
-        })
-    });
+    try {
+        const response = await fetch('https://www.strava.com/oauth/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                client_id: clientId,
+                client_secret: clientSecret,
+                code: code,
+                grant_type: 'authorization_code'
+            })
+        });
 
-    const data = await response.json();
-    const accessToken = data.access_token;
-
-    const activitiesResponse = await fetch('https://www.strava.com/api/v3/athlete/activities', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
+        if (!response.ok) {
+            throw new Error('Failed to fetch token');
         }
-    });
 
-    const activities = await activitiesResponse.json();
-    const latestActivity = activities[0];
-    const calories = latestActivity.calories;
-    const bananaCount = (calories / 100).toFixed(2);
-    updateBananaCount(bananaCount);
+        const data = await response.json();
+        const accessToken = data.access_token;
 
-    bananaBalance += parseFloat(bananaCount);
-    updateStravaActivityDescription(latestActivity.id, bananaCount, bananaBalance, accessToken);
-    updateLeaderboard('Player', bananaBalance);
+        const activitiesResponse = await fetch('https://www.strava.com/api/v3/athlete/activities', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        if (!activitiesResponse.ok) {
+            throw new Error('Failed to fetch activities');
+        }
+
+        const activities = await activitiesResponse.json();
+        const latestActivity = activities[0];
+        const calories = latestActivity.calories;
+        const bananaCount = (calories / 100).toFixed(2);
+
+        updateBananaCount(bananaCount);
+        bananaBalance += parseFloat(bananaCount);
+        await updateStravaActivityDescription(latestActivity.id, bananaCount, bananaBalance, accessToken);
+        updateLeaderboard('Player', bananaBalance);
+    } catch (error) {
+        console.error('Error fetching Strava data:', error);
+    }
 }
 
 function updateBananaCount(count) {
@@ -54,16 +79,20 @@ function updateBananaCount(count) {
 }
 
 async function updateStravaActivityDescription(activityId, bananaCount, bananaBalance, accessToken) {
-    const description = `Bananas earned：${bananaCount}，current banana balence：${bananaBalance}`;
+    const description = `Bananas earned: ${bananaCount}, current banana balance: ${bananaBalance}`;
 
-    await fetch(`https://www.strava.com/api/v3/activities/${activityId}`, {
-        method: 'PUT',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ description })
-    });
+    try {
+        await fetch(`https://www.strava.com/api/v3/activities/${activityId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ description })
+        });
+    } catch (error) {
+        console.error('Error updating Strava activity description:', error);
+    }
 }
 
 function updateLeaderboard(player, bananas) {
@@ -86,13 +115,4 @@ document.getElementById('toggle-leaderboard').addEventListener('click', () => {
     leaderboard.classList.toggle('hidden');
     const button = document.getElementById('toggle-leaderboard');
     button.textContent = leaderboard.classList.contains('hidden') ? 'Show Leaderboard' : 'Hide Leaderboard';
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-
-    if (code) {
-        fetchStravaData(code);
-    }
 });
