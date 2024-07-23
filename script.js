@@ -64,13 +64,13 @@ async function fetchStravaData(code) {
         const activities = await activitiesResponse.json();
         const latestActivity = activities[0];
 
-        // Ensure latestActivity and calories are valid
-        if (!latestActivity || typeof latestActivity.calories !== 'number') {
-            console.error('Invalid latestActivity or calories:', latestActivity);
+        // Ensure latestActivity and Calories are valid
+        if (!latestActivity || typeof latestActivity.Calories !== 'number') {
+            console.error('Invalid latestActivity or Calories:', latestActivity);
             return;
         }
 
-        const calories = latestActivity.calories;
+        const calories = latestActivity.Calories; // 使用正确的字段名称
         console.log('Calories:', calories);
 
         const bananaCount = (calories / 100).toFixed(2);
