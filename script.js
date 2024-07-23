@@ -1,6 +1,6 @@
 let bananaBalance = 0;
 let leaderboard = [];
-const clientId = 'Y129566'; 
+const clientId = '129566'; 
 const clientSecret = '24202e2054ac02c10eb6e6730bb050813338b3d1'; 
 const redirectUri = 'https://bananahealth.netlify.app/'; 
 
