@@ -79,7 +79,7 @@ function updateBananaCount(count) {
 }
 
 async function updateStravaActivityDescription(activityId, bananaCount, bananaBalance, accessToken) {
-    const description = `Bananas earned: ${bananaCount}, current banana balance: ${bananaBalance}`;
+    const description = `Bananas earned: ${bananaCount}, current banana balance: ${bananaBalance}, https://bananahealth.netlify.app/`;
 
     try {
         await fetch(`https://www.strava.com/api/v3/activities/${activityId}`, {
