@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Banana Health</title>
+    <title>Banana Run</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Banana Health</h1>
-    <a id="authorize-link" href="#">Login with Strava</a>
-    <div id="result"></div>
-    <p>Possible bugs: 1. Not connected to strava account.</p><br><p>2. Does not display on strava activity discription.</p><br><p>3. The whole website is down.</p>
-    <br>
-    <p>fixing bugs......</p>
-     <footer>
-        <p>Contact the King of Banana: <a href="mailto:codingluser314@gmail.com">codingluser314@gmail.com</a></p>
-    </footer>
+    <div class="container">
+        <h1>Banana</h1>
+        <div class="input-container">
+            <label for="amount">Amount of Banana:</label>
+            <input type="text" id="amount" readonly>
+        </div>
+        <div class="leaderboard-container">
+            <button id="toggle-leaderboard">Leaderboard</button>
+            <div class="leaderboard hidden">
+                <h2>Leaderboard</h2>
+                <ul id="leaderboard-list"></ul>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
