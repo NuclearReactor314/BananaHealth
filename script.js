@@ -29,6 +29,7 @@ document.getElementById('login-button').addEventListener('click', () => {
 
 async function fetchStravaData(code) {
     try {
+        // Fetch access token
         const response = await fetch('https://www.strava.com/oauth/token', {
             method: 'POST',
             headers: {
@@ -49,6 +50,7 @@ async function fetchStravaData(code) {
         const data = await response.json();
         const accessToken = data.access_token;
 
+        // Fetch athlete activities
         const activitiesResponse = await fetch('https://www.strava.com/api/v3/athlete/activities', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -61,10 +63,21 @@ async function fetchStravaData(code) {
 
         const activities = await activitiesResponse.json();
         const latestActivity = activities[0];
+
+        // Ensure latestActivity and calories are valid
+        if (!latestActivity || typeof latestActivity.calories !== 'number') {
+            console.error('Invalid latestActivity or calories:', latestActivity);
+            return;
+        }
+
         const calories = latestActivity.calories;
+        console.log('Calories:', calories);
+
         const bananaCount = (calories / 100).toFixed(2);
+        console.log('Banana Count:', bananaCount);
 
         updateBananaCount(bananaCount);
+
         bananaBalance += parseFloat(bananaCount);
         await updateStravaActivityDescription(latestActivity.id, bananaCount, bananaBalance, accessToken);
         updateLeaderboard('Player', bananaBalance);
@@ -75,7 +88,12 @@ async function fetchStravaData(code) {
 
 function updateBananaCount(count) {
     const amountInput = document.getElementById('amount');
-    amountInput.value = count;
+    if (!isNaN(count)) {
+        amountInput.value = count;
+    } else {
+        console.error('Invalid banana count:', count);
+        amountInput.value = 'Error';
+    }
 }
 
 async function updateStravaActivityDescription(activityId, bananaCount, bananaBalance, accessToken) {
